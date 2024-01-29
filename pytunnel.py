@@ -1,26 +1,26 @@
 #!/usr/bin/env python3
 
 import subprocess
-import sys
 import argparse
 
-parser = argparse.ArgumentParser(
-    
-)
+parser = argparse.ArgumentParser(description='Do the needful')
+parser.add_argument('--show', action='store_true', help='show the list of port forwardings')
+parser.add_argument('--')
+args = parser.parse_args()
 
 # Define your port forwarding mappings here
 port_forwardings = {
     # format: 'local port':'remote:port'
     # Example: 10001: "192.168.1.16:9100",
-
+    10001: "192.168.1.16:9100",
 }
+base_command = ["ssh", "192.168.1.20"]
 
 def create_ssh_tunnel():
-    if sys.argv[1] == '-h':
-        print("This will output help")
-    elif sys.argv[1] == 'show':
+    if args.show:
         # for local_port, remote in port_forwardings.items():
         #     print(f"{local_port:^4} {remote}")
+        print(f"Jump Host: {base_command[1]}")
         max_length_local_port = max(len(str(local_port)) for local_port, _ in port_forwardings.items())
         max_length_remote = max(len(str(remote)) for _, remote in port_forwardings.items())
 
@@ -29,8 +29,6 @@ def create_ssh_tunnel():
 
 
     else:
-        base_command = ["ssh", "192.168.1.20"]
-
         # Add port forwarding arguments
         for local_port, remote in port_forwardings.items():
             forward_arg = f"{local_port}:{remote}"
