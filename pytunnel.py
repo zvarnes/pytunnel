@@ -5,7 +5,6 @@ import argparse
 
 parser = argparse.ArgumentParser(description='Do the needful')
 parser.add_argument('--show', action='store_true', help='show the list of port forwardings')
-parser.add_argument('--')
 args = parser.parse_args()
 
 # Define your port forwarding mappings here
@@ -17,17 +16,17 @@ port_forwardings = {
 base_command = ["ssh", "192.168.1.20"]
 
 def create_ssh_tunnel():
-    if args.show:
+    # check that there are entries. better port/ip probably needs to be done
+    if bool(port_forwardings) == False:
+        print("No entries in 'port_forwardings'")
+    elif args.show:
         # for local_port, remote in port_forwardings.items():
         #     print(f"{local_port:^4} {remote}")
         print(f"Jump Host: {base_command[1]}")
         max_length_local_port = max(len(str(local_port)) for local_port, _ in port_forwardings.items())
         max_length_remote = max(len(str(remote)) for _, remote in port_forwardings.items())
-
         for local_port, remote in port_forwardings.items():
             print(f"{local_port:>{max_length_local_port}} {remote:<{max_length_remote}}")
-
-
     else:
         # Add port forwarding arguments
         for local_port, remote in port_forwardings.items():
