@@ -1,0 +1,28 @@
+# pytunnel configuration
+# Copy to ~/.config/pytunnel/config.yaml (or config.json in JSON form).
+#
+# Each key under jump_hosts is an SSH jump host; pytunnel opens one
+# ControlMaster connection per host carrying all of its forwards.
+
+jump_hosts:
+  # Minimal: local forwards only (ssh -L <local>:<destination>)
+  192.0.2.10:
+    forwards:
+      10001: "192.0.2.99:8006"   # https://localhost:10001 -> proxmox behind the jump host
+      10002: "192.0.2.17:9100"
+
+  # All options
+  gateway.example.com:
+    user: admin
+    port: 2222
+    identity_file: ~/.ssh/id_ed25519
+    # Local forwards: listen locally, connect from the jump host
+    forwards:
+      - local: 10003
+        remote: "10.0.0.50:22"
+    # Remote forwards (ssh -R): listen on the jump host, connect from your machine
+    remote_forwards:
+      19022: "127.0.0.1:22"
+    # Dynamic forwards (ssh -D): local SOCKS proxy through the jump host
+    dynamic:
+      - 1080
